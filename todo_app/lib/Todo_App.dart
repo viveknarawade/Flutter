@@ -28,10 +28,7 @@ class _TodoAppState extends State<TodoApp> {
   }
 
   List<Todomodel> listOfTask = [
-    Todomodel(
-        title: "vivek",
-        description: " descriptionController.text",
-        date: "dateController.text")
+ 
   ];
   clearTextField() {
     titleController.clear();
@@ -40,21 +37,30 @@ class _TodoAppState extends State<TodoApp> {
   }
 
   // for adding data into listOfTask
-  submitData() {
+  submitData(bool isEdit, [Todomodel? obj]) {
     if (titleController.text.trim().isNotEmpty &&
         descriptionController.text.trim().isNotEmpty &&
         dateController.text.trim().isNotEmpty) {
-      listOfTask.add(Todomodel(
-          title: titleController.text,
-          description: descriptionController.text,
-          date: dateController.text));
+      if (isEdit) {
+        obj!.title = titleController.text;
+        obj.description = descriptionController.text;
+        obj.date = dateController.text;
+        
+      } else {
+       
+        listOfTask.add(Todomodel(
+            title: titleController.text,
+            description: descriptionController.text,
+            date: dateController.text));
+      }
     }
     clearTextField();
     setState(() {});
+
     Navigator.of(context).pop();
   }
 
-  taskBottomSheet() {
+  taskBottomSheet(bool isEdit, [Todomodel? obj]) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -108,7 +114,7 @@ class _TodoAppState extends State<TodoApp> {
                 ),
                 TextField(
                     controller: descriptionController,
-                    maxLines: listOfTask.length,
+                    maxLines: 2,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
@@ -158,7 +164,7 @@ class _TodoAppState extends State<TodoApp> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    submitData();
+                    submitData(isEdit, obj);
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -230,7 +236,8 @@ class _TodoAppState extends State<TodoApp> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(52),
                           ),
-                          child: Image.asset("assets/logo.png"),
+                         
+                          child: Icon(Icons.image,size: 25,),
                         ),
                         Flexible(
                           child: Padding(
@@ -279,7 +286,15 @@ class _TodoAppState extends State<TodoApp> {
                             children: [
                               /// Edit Icon
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  titleController.text =
+                                      listOfTask[index].title;
+                                  descriptionController.text =
+                                      listOfTask[index].description;
+                                  dateController.text = listOfTask[index].date;
+                                  taskBottomSheet(true, listOfTask[index]);
+                             
+                                },
                                 icon: const Icon(
                                   Icons.edit,
                                 ),
@@ -309,7 +324,8 @@ class _TodoAppState extends State<TodoApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          taskBottomSheet();
+          clearTextField();
+          taskBottomSheet(false);
         },
         child: const Icon(Icons.add),
       ),
