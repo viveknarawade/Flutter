@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import './TodoModel.dart';
 
 class TodoApp extends StatefulWidget {
   const TodoApp({super.key});
@@ -8,15 +10,181 @@ class TodoApp extends StatefulWidget {
 }
 
 class _TodoAppState extends State<TodoApp> {
-  List cardColor = [
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+
+  /// for color of card
+  List listOfCardColor = [
     const Color.fromRGBO(250, 232, 232, 1),
     const Color.fromRGBO(232, 237, 250, 1),
     const Color.fromRGBO(250, 249, 232, 1),
     const Color.fromRGBO(250, 232, 250, 1),
   ];
 
+  /// to change colors of card
   Color? changeColor(int index) {
-    return cardColor[index % cardColor.length];
+    return listOfCardColor[index % listOfCardColor.length];
+  }
+
+  List<Todomodel> listOfTask = [
+    Todomodel(
+        title: "vivek",
+        description: " descriptionController.text",
+        date: "dateController.text")
+  ];
+  clearTextField() {
+    titleController.clear();
+    descriptionController.clear();
+    dateController.clear();
+  }
+
+  // for adding data into listOfTask
+  submitData() {
+    if (titleController.text.trim().isNotEmpty &&
+        descriptionController.text.trim().isNotEmpty &&
+        dateController.text.trim().isNotEmpty) {
+      listOfTask.add(Todomodel(
+          title: titleController.text,
+          description: descriptionController.text,
+          date: dateController.text));
+    }
+    clearTextField();
+    setState(() {});
+    Navigator.of(context).pop();
+  }
+
+  taskBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 16,
+              left: 16,
+              right: 16,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Text(
+                      "Create To-Do",
+                      style:
+                          TextStyle(fontSize: 29, fontWeight: FontWeight.w700),
+                    )),
+                const SizedBox(height: 10),
+                const Text(
+                  "Title",
+                  style: TextStyle(
+                      fontSize: 17, color: Color.fromRGBO(0, 139, 148, 1)),
+                ),
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                      borderSide: const BorderSide(
+                        color: Color.fromRGBO(0, 139, 148, 1),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Description",
+                  style: TextStyle(
+                      fontSize: 17, color: Color.fromRGBO(0, 139, 148, 1)),
+                ),
+                TextField(
+                    controller: descriptionController,
+                    maxLines: listOfTask.length,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(0, 139, 148, 1))))),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  "Date",
+                  style: TextStyle(
+                      fontSize: 17, color: Color.fromRGBO(0, 139, 148, 1)),
+                ),
+                TextField(
+                    controller: dateController,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2023),
+                        lastDate: DateTime(2025),
+                      );
+
+                      String formatedDate =
+                          DateFormat.MMMMd().format(pickedDate!);
+                      dateController.text = formatedDate;
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.calendar_today,
+                              color: Color.fromRGBO(0, 139, 148, 1)),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                                color: Color.fromRGBO(0, 139, 148, 1))))),
+                const SizedBox(
+                  height: 25,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    submitData();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(0, 139, 148, 1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      "Submit",
+                      style: TextStyle(
+                        fontSize: 28,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   @override
@@ -35,7 +203,7 @@ class _TodoAppState extends State<TodoApp> {
       body: Padding(
         padding: const EdgeInsets.only(top: 30.0),
         child: ListView.builder(
-          itemCount: 3,
+          itemCount: listOfTask.length,
           itemBuilder: (context, index) {
             return Padding(
               padding:
@@ -71,7 +239,7 @@ class _TodoAppState extends State<TodoApp> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "",
+                                  listOfTask[index].title,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: const TextStyle(
@@ -82,7 +250,7 @@ class _TodoAppState extends State<TodoApp> {
                                 Container(
                                   width: 270,
                                   child: Text(
-                                    "",
+                                    listOfTask[index].description,
                                     style: const TextStyle(fontSize: 16),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
@@ -102,21 +270,25 @@ class _TodoAppState extends State<TodoApp> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "",
+                            listOfTask[index].date,
                             style: const TextStyle(
                               fontSize: 16,
                             ),
                           ),
                           Row(
                             children: [
+                              /// Edit Icon
                               IconButton(
                                 onPressed: () {},
                                 icon: const Icon(
                                   Icons.edit,
                                 ),
                               ),
+
+                              /// Delete Icon
                               IconButton(
                                 onPressed: () {
+                                  listOfTask.removeAt(index);
                                   setState(() {});
                                 },
                                 icon: const Icon(
@@ -136,7 +308,9 @@ class _TodoAppState extends State<TodoApp> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          taskBottomSheet();
+        },
         child: const Icon(Icons.add),
       ),
     );
