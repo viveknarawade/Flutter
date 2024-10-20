@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 
 class Todoapp extends StatefulWidget {
   const Todoapp({super.key});
@@ -10,6 +11,128 @@ class Todoapp extends StatefulWidget {
 }
 
 class _TodoappState extends State<Todoapp> {
+  // Function to display the bottom sheet for adding/editing tasks
+  void taskBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 16,
+              left: 16,
+              right: 16,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Text(
+                      "Create To-Do",
+                      style:
+                          TextStyle(fontSize: 29, fontWeight: FontWeight.w700),
+                    )),
+                const SizedBox(height: 10),
+                // Title input
+                const Text(
+                  "Title",
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Color.fromRGBO(89, 57, 241, 1),
+                  ),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                      borderSide: const BorderSide(
+                        color: Color.fromRGBO(89, 57, 241, 1),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Description input
+                const Text(
+                  "Description",
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Color.fromRGBO(89, 57, 241, 1),
+                  ),
+                ),
+                TextField(
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(89, 57, 241, 1),
+                            )))),
+                const SizedBox(height: 10),
+                // Date input
+                const Text(
+                  "Date",
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Color.fromRGBO(89, 57, 241, 1),
+                  ),
+                ),
+                TextField(
+                    decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.calendar_month_outlined,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(89, 57, 241, 1),
+                            )))),
+                const SizedBox(height: 25),
+                // Submit button
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 30),
+                    width: 320,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(89, 57, 241, 1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      "Submit",
+                      style: TextStyle(
+                        fontSize: 28,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 25),
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,22 +141,22 @@ class _TodoappState extends State<Todoapp> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.only(left: 20.0, top: 60),
+            padding: EdgeInsets.only(left: 34.0, top: 70),
             child: Text(
-              "Good Morning",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              "Good morning",
+              style: TextStyle(color: Colors.white, fontSize: 23),
             ),
           ),
           const Padding(
             padding: EdgeInsets.only(
-              left: 20.0,
+              left: 34.0,
               bottom: 30,
             ),
             child: Text(
               "Vivek",
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 30,
                   fontWeight: FontWeight.w600),
             ),
           ),
@@ -49,14 +172,14 @@ class _TodoappState extends State<Todoapp> {
               child: Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
+                    padding: EdgeInsets.only(top: 17.0),
                     child: Text(
                       "CREATE TO DO LIST ",
                       style: TextStyle(fontSize: 15),
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 17,
                   ),
                   Expanded(
                     child: Container(
@@ -125,13 +248,15 @@ class _TodoappState extends State<Todoapp> {
                                           vertical: 10),
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 8),
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         color: Colors.white,
                                         boxShadow: [
                                           BoxShadow(
-                                            blurRadius: 5,
+                                            color:
+                                                Colors.black.withOpacity(0.30),
+                                            blurRadius: 8,
                                             offset: Offset(0, 5),
-                                             blurStyle: BlurStyle.outer,
+                                            blurStyle: BlurStyle.outer,
                                           )
                                         ],
                                       ),
@@ -202,7 +327,9 @@ class _TodoappState extends State<Todoapp> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
         child: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            taskBottomSheet();
+          },
           icon: const Icon(
             Icons.add,
             color: Colors.white,
